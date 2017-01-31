@@ -100,18 +100,18 @@ bool in_tree(tree *root, char *word)
         }    
 }
 
-void inOrder(tree *root)
+void in_order(tree *root)
 {
     if (root->left != NULL)
     {
-        inOrder(root->left);
+        in_order(root->left);
     }
 
     printf("%s\n", root->word);
 
     if (root->right != NULL)
     {
-        inOrder(root->right);
+        in_order(root->right);
     }
 }
 
@@ -145,13 +145,24 @@ tree * tree_intersection(FILE *fp, tree *root)
     char buf[256];
     size_t wordLen = 0;
     char *word = NULL;
+    tree *newTree = NULL;;
 
     while (fscanf(fp, " %255s", buf) != EOF)
     {
-        break;       
+        if(in_tree(root, buf))
+        {
+            word = NULL;
+            wordLen = strlen(buf);
+            word = malloc(sizeof(char) * wordLen + 1);
+            word[wordLen] = '\0';
+            word = strncpy(word, buf, wordLen);
+            newTree = Insert(newTree, word);            
+        }   
     }
 
-    return root;
+    destroy_tree(root);
+
+    return newTree;
 }
 
 int main(int argc, char *argv[])
@@ -172,10 +183,23 @@ int main(int argc, char *argv[])
 
     tree *root = NULL;
     root = load_file(fp, root);
-    fclose(fp);
+    fclose(fp); 
 
-    printf("%d\n", in_tree(root, "thing"));
-    
+    for(int i = 2; i < argc; ++i)
+    {
+        fp = fopen(argv[i], "r");
+
+        if(fp == NULL)
+        {
+            printf("ERROR, USAGE: %s appears to be missing\n", argv[i]);
+            return 0;
+        }
+        root = tree_intersection(fp, root);
+        fclose(fp);
+    }
+
+    in_order(root);
+
     destroy_tree(root);
     root = NULL;
 }

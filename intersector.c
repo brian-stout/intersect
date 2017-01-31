@@ -32,6 +32,8 @@ tree *Insert(tree *root, char *word)
         cmpValue = strncasecmp(word, root->word, strlen(word));
         if (cmpValue == 0)
         {
+            //Since word is being discard it needs to be free()'d
+            free(word);
             return root;
         }
         else if (cmpValue > 0)
@@ -48,15 +50,20 @@ tree *Insert(tree *root, char *word)
 
 void destroy_tree(tree* root)
 {
-    if (root == NULL)
-    {
-         return;
-    }
-       
-    destroy_tree(root->left);  
-    destroy_tree(root->right);
 
-    free(root->word);
+    if(root->word)
+    {
+        free(root->word);
+    }
+    if(root->left)
+    {
+        destroy_tree(root->left);
+    }
+    if(root->right)
+    {
+        destroy_tree(root->right);
+    }
+
     free(root);
 } 
 
@@ -82,8 +89,9 @@ tree * load_file(FILE *fp, tree *root)
         size_t wordLen = 0;
         char *word = NULL;
 
-        while (fscanf(fp, " %255s", buf) == 1)
+        while (fscanf(fp, " %255s", buf) != EOF)
         {
+            word = NULL;
             wordLen = strlen(buf);
             word = malloc(sizeof(char) * wordLen + 1);
             word[wordLen] = '\0';
@@ -92,6 +100,8 @@ tree * load_file(FILE *fp, tree *root)
             root = Insert(root, word);
         }
         
+        word = NULL;
+
         return root;
 }
 
@@ -113,11 +123,11 @@ int main(int argc, char *argv[])
 
     tree *root = NULL;
     root = load_file(fp, root);
-
     fclose(fp);
 
     inOrder(root);
     
 
     destroy_tree(root);
+    root = NULL;
 }

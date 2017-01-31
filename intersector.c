@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <stdbool.h>
 
 typedef struct tree {
     char *word;
@@ -65,7 +66,39 @@ void destroy_tree(tree* root)
     }
 
     free(root);
-} 
+}
+
+bool in_tree(tree *root, char *word)
+{
+        int cmpValue = 0;
+        cmpValue = strncasecmp(word, root->word, strlen(word));
+        if (cmpValue == 0)
+        {
+            return true;
+        }
+        else if (cmpValue > 0)
+        {
+            if(root->right != NULL)
+            {
+                return in_tree(root->right, word);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if(root->left != NULL)
+            {
+                return in_tree(root->left, word);
+            }
+            else
+            {
+                return false;
+            }
+        }    
+}
 
 void inOrder(tree *root)
 {
@@ -81,6 +114,8 @@ void inOrder(tree *root)
         inOrder(root->right);
     }
 }
+
+
 
 tree * load_file(FILE *fp, tree *root)
 {
@@ -105,6 +140,20 @@ tree * load_file(FILE *fp, tree *root)
         return root;
 }
 
+tree * tree_intersection(FILE *fp, tree *root)
+{
+    char buf[256];
+    size_t wordLen = 0;
+    char *word = NULL;
+
+    while (fscanf(fp, " %255s", buf) != EOF)
+    {
+        break;       
+    }
+
+    return root;
+}
+
 int main(int argc, char *argv[])
 {
     if ( argc < 3 )
@@ -125,9 +174,8 @@ int main(int argc, char *argv[])
     root = load_file(fp, root);
     fclose(fp);
 
-    inOrder(root);
+    printf("%d\n", in_tree(root, "thing"));
     
-
     destroy_tree(root);
     root = NULL;
 }

@@ -250,8 +250,6 @@ in_order(tree * root)
     }
 }
 
-
-
 tree *
 load_file(FILE * fp, tree * root)
 {
@@ -266,6 +264,8 @@ load_file(FILE * fp, tree * root)
     char *word = NULL;
 
     //Until EOF, scan every individual word up to 255 characters (+1 for null byte)
+
+    /*fscanf was used on suggestion by SGT Oberbeck*/
     while (fscanf(fp, " %255s", buf) != EOF)
     {
         //Sets char pointer to NULL at start to avoid undefined behavior

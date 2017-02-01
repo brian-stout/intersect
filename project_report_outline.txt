@@ -1,0 +1,75 @@
+Name: BRIAN J. STOUT
+Date: 01FEB2017
+Current Module: Data Structures and Algorithms
+Project Name: Intersecter
+
+	Project Goals:
+  The goal is to take any given number of word documents and find the words common between all documents.
+
+Considerations:
+ <A bulleted list of considerations and conditions which affected the design of your project>
+
+    o   The program much read all the words of a file, and store them in a datastructure that can be searched efficiently.
+
+    o   The program's max buffer size for reading in words has to be at a mininum 256 characters.
+
+    o   The program can store the first data file in memory, but there is no guaruntee the rest of the files loaded in will fit in memory.
+
+    o   The program is case insensitive so the original case must be maintained throughout the program no matter the logic used.
+
+    o   Arbitarialy large dictionaries can be used so words must be stored in a data structure that can be sorted (or is sorted on insertion) which can be searched efficiently to avoid long processing times.
+
+Initial Design:
+
+    Because of the relatively small program, all the code is contained in the main .c file.  The program contains six seperate function from main which handle the Binary Search Tree logic, as well as the word intersection logic.  The functions are declared before the main function, but the code is placed afterwards.
+
+    The main function handles error handling, parsing command line arguments, and opening/closing file pointers.
+
+Data Flow:
+
+    At the start of the program the main function determines if the correct number of command line arguments were supplied by the user.  The mininum command lind arguments is 3, 'argv[0]' being the program name, and argv[1-2] being two files to be intersected.  More files can be provided but are not nessecary.  If the user fails to provide the mininum number, the program prints an error and exits.
+
+    The main function then opens up a file pointer using the name in argv[1], which is passed to the load_file function.  The load_file function is responsible for stepping through the word document opened with fopen, and putting the data in a Binary Search Tree.
+
+    Afterwards the program steps in to a for loop which iterates through the remaining chracter pointers in argv (starting at argv[2].)  If argc is the mininum value of 3, the loops only ever happens once.  The loop opens up a file pointer to the file specified in argv[i] and passes that file pointer to the tree_intersection function along with the root of the current Binary Search Tree.  The tree_intersection behaves very similarly to the load_tree function, but only inserts words in to a new Binary Search Tree, if it can find the current word in the original Binary Search Tree.  This effectively creates a new Binary Search Tree which only has words contained in both the previous BST, and the current word document.  The new Binary Search Tree is returned to the main function and the old one is destroyed to free up memory.  If there is more than the mininum two documents provided in the command line argument the tree_intersection function is ran with the new BST and the next file to be loaded.
+
+    After all the word documents have been parsed a BST containing only common words between all the documents will be stored in the 'root' tree pointer.  The tree pointer is passed to the in_order function which prints out the word alphabetically using an Left, Process, Right methodology.  Afterwards the memory is free'd and the program is over.
+
+Communication Protocol:
+
+    This is not a networking program
+
+Potential Pitfalls:
+
+    Using hashes to increase the look up time introduces additional complexities because of the case insensitive requirement.
+
+    Because the implementation of the binary search tree isn't self balancing, inserting a large dictionary results will result in a horribly inbalanced tree resulting in poor look up times for the first intersection.  This can be avoided using a balancing tree but introduces more program complexities.  Without balancing the intersector program will still be efficient with word documents that aren't already sorted.
+
+Test Plan:
+		User Test:
+Passing a document with garbage data in it.
+
+Passing a word dictionary to the program.
+
+Passing normal written text to the program
+
+Comparing two books.
+
+		Test Cases:
+Program tries it's best and usually returns nothing, but it doesn't crash
+
+Because there isn't any balancing the word dictionary BST is essentially a linked list, and as a result search times are significantly slowed down
+
+Normal written text works fast.
+
+The two books work slower than smaller text, but still pretty fast
+
+
+
+Conclusion:
+	<A review of the project, what worked, what didn’t and how to improve
+upon your project in the future.>
+
+
+
+

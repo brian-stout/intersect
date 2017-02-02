@@ -64,11 +64,12 @@ Normal written text works fast.
 
 The two books work slower than smaller text, but still pretty fast
 
-
-
 Conclusion:
-	<A review of the project, what worked, what didn’t and how to improve
-upon your project in the future.>
+	Coming up with a clean and efficient solution to the project was the main challenge.  Implementing the Binary Search Tree structure wasn't too difficult.  The main issue lies in optimizing the program.  Just using the Binary Search Tree was adequate, and greatly improves the programs search times.  However, some issues remain with balancing for alphabatized lists.
+
+    Implementing solutions to these problems is the main issue, as self balancing trees are much more complicated, especially with the program requirements.  I couldn't get a perfect implementation of self balancing working.
+
+    Another obvious improvement is creating a function which moves words from the original tree to the new one during the intersection and repairs the node connections in the tree.  This has the advantage of never using more memory than what's originally loaded in the tree, and slimming the original tree for additional searches.
 
 
 
